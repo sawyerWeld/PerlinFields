@@ -1,7 +1,7 @@
 
 
 float[][] hmap;
-int w, h, c, r, g, max_elevation;
+int w, h, c, r, g, max_elevation, water_height;
 
 // w = width of map
 // h = height of map
@@ -11,14 +11,17 @@ int w, h, c, r, g, max_elevation;
 
 void setup() {
   fullScreen(P3D);
+  noiseSeed((long)random(1000));
   //size(1200, 600, P3D);
   //stroke(0);
   noStroke();
   w = 2000;
   h = 1000;
-  g = 2;
-  max_elevation = 150;
-  
+  g = 5;
+  max_elevation = (int) random(100, 200);
+  water_height = (int) random(10, max_elevation-20);
+
+
   c = w / g;
   r = h / g;
   hmap = new float[c][r];
@@ -34,77 +37,91 @@ void setup() {
 }
 
 void draw() {
-  background(150);
+  background(165, 237, 237);
 
   translate(width/2, height/2);
 
   rotateX(1);
   translate(-w/2, -h/2);
+
   for (int i = 1; i < c; i ++) {
     for (int j = 1; j < r; j++) {
-      
-      float e = hmap[i][j]; // elevation
-      // the top
-      //fill(48,86,29);
-      float height_shade = map(e,0,max_elevation,50,200);
-      fill(height_shade);
-      
-      // from black to green to white
-      boolean greenTops = false;
-      if (greenTops) {
-        float height_percent = map(e,0,max_elevation,0,1);
-        if (height_percent < .5)
-        {
-          fill(0,height_percent * 255 * 2,0);
-        } else {
-          float red_blue = 255 * map(height_percent, .5, 1, 0 , 1);
-          fill(red_blue,255,red_blue);
-        }
+      if (hmap[i][j] > water_height) {
+        drawLand(i, j);
+      } else {
+        drawWater(i, j);
       }
-      
-      
-      
-      beginShape();
-      vertex(i*g, j*g, e);
-      vertex((i+1)*g, j*g, e);
-      vertex((i+1)*g, (j+1)*g, e);
-      vertex(i*g, (j+1)*g, e);
-      endShape(CLOSE);
-      // the left
-      fill(147,189,91);
-      beginShape();
-      vertex(i*g, j*g, e);
-      vertex(i*g, j*g, 0);
-      vertex(i*g, (j+1)*g, 0);
-      vertex(i*g, (j+1)*g, e);
-      endShape(CLOSE);
-      // the right
-      fill(147,189,91);
-      //fill(150);
-      beginShape();
-      vertex((i+1)*g, j*g, e);
-      vertex((i+1)*g, j*g, 0);
-      vertex((i+1)*g, (j+1)*g, 0);
-      vertex((i+1)*g, (j+1)*g, e);
-      endShape(CLOSE);
-      // the front
-      fill(92,133,55);
-      //fill(150);
-      beginShape();
-      vertex(i*g, (j+1)*g, e);
-      vertex(i*g, (j+1)*g, 0);
-      vertex((i+1)*g, (j+1)*g, 0);
-      vertex((i+1)*g, (j+1)*g, e);
-      endShape(CLOSE);
     }
   }
-
-  //translate(58, 48, 0); 
-  //rotateY(0.5);
-  //box(40, 20, 50);
+  drawWaterLevel();
 }
 
-color topColor()
+void drawLand(int i, int j)
 {
-  return color(255);
+  float e = hmap[i][j]; // elevation
+  // the top
+  //fill(48,86,29);
+  float height_shade = map(e, 0, max_elevation, 0, 255);
+  fill(height_shade);
+
+  beginShape();
+  vertex(i*g, j*g, e);
+  vertex((i+1)*g, j*g, e);
+  vertex((i+1)*g, (j+1)*g, e);
+  vertex(i*g, (j+1)*g, e);
+  endShape(CLOSE);
+  // the left
+  fill(147, 189, 91);
+  beginShape();
+  vertex(i*g, j*g, e);
+  vertex(i*g, j*g, 0);
+  vertex(i*g, (j+1)*g, 0);
+  vertex(i*g, (j+1)*g, e);
+  endShape(CLOSE);
+  // the right
+  fill(147, 189, 91);
+  //fill(150);
+  beginShape();
+  vertex((i+1)*g, j*g, e);
+  vertex((i+1)*g, j*g, 0);
+  vertex((i+1)*g, (j+1)*g, 0);
+  vertex((i+1)*g, (j+1)*g, e);
+  endShape(CLOSE);
+  // the front
+  fill(92, 133, 55);
+  //fill(150);
+  if (j == r-1) {
+    fill(165, 237, 237);
+  }
+  beginShape();
+  vertex(i*g, (j+1)*g, e);
+  vertex(i*g, (j+1)*g, 0);
+  vertex((i+1)*g, (j+1)*g, 0);
+  vertex((i+1)*g, (j+1)*g, e);
+  endShape(CLOSE);
+}
+
+void drawWater(int i, int j) {
+  float e = water_height; // elevation
+  fill(0, 0, 128);
+  beginShape();
+  vertex(i*g, j*g, e);
+  vertex((i+1)*g, j*g, e);
+  vertex((i+1)*g, (j+1)*g, e);
+  vertex(i*g, (j+1)*g, e);
+  endShape(CLOSE);
+}
+
+void drawWaterLevel() {
+  fill(165, 237, 237);
+  beginShape();
+  vertex(0, h+1, water_height);
+  vertex(w, h+1, water_height);
+  vertex(w, h+1, 0);
+  vertex(0, h+1, 0);
+  endShape(CLOSE);
+}
+
+void mouseClicked() {
+  setup();
 }
