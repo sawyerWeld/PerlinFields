@@ -14,11 +14,11 @@ void setup() {
   //size(600, 600, P3D);
   //stroke(0);
   noStroke();
-  fill(122);
-  w = 1500;
+  //fill(122);
+  w = 1000;
   h = 1000;
   g = 2;
-  max_elevation = 80;
+  max_elevation = 150;
   
   c = w / g;
   r = h / g;
@@ -27,8 +27,8 @@ void setup() {
   for (int i = 0; i < c; i ++) {
     for (int j = 0; j < r; j++) {
       // hmap[i][j] = random(0, 20);
-      float i_noise = i * .1 * ((float)g/5);
-      float j_noise = j * .1 * ((float)g/5);
+      float i_noise = i * .1 * ((float)g/10);
+      float j_noise = j * .1 * ((float)g/10);
       hmap[i][j] = map(noise(i_noise, j_noise), 0, 1, 0, max_elevation);
     }
   }
@@ -46,25 +46,17 @@ void draw() {
       float e = hmap[i][j]; // elevation
       // the top
       //fill(48,86,29);
-      fill(map(e,0,max_elevation,0,255));
+      float height_shade = map(e,0,max_elevation,0,190);
+      fill(height_shade);
       beginShape();
       vertex(i*g, j*g, e);
       vertex((i+1)*g, j*g, e);
       vertex((i+1)*g, (j+1)*g, e);
       vertex(i*g, (j+1)*g, e);
       endShape(CLOSE);
-      // the front
-      //fill(92,133,55);
-      fill(150);
-      beginShape();
-      vertex(i*g, (j+1)*g, e);
-      vertex(i*g, (j+1)*g, 0);
-      vertex((i+1)*g, (j+1)*g, 0);
-      vertex((i+1)*g, (j+1)*g, e);
-      endShape(CLOSE);
       // the left
-      //fill(147,189,91);
-      fill(150);
+      fill(147,189,91);
+      //fill(150);
       beginShape();
       vertex(i*g, j*g, e);
       vertex(i*g, j*g, 0);
@@ -72,11 +64,21 @@ void draw() {
       vertex(i*g, (j+1)*g, e);
       endShape(CLOSE);
       // the right
-      //fill(147,189,91);
-      fill(150);
+      fill(147,189,91);
+      //fill(150);
       beginShape();
       vertex((i+1)*g, j*g, e);
       vertex((i+1)*g, j*g, 0);
+      vertex((i+1)*g, (j+1)*g, 0);
+      vertex((i+1)*g, (j+1)*g, e);
+      endShape(CLOSE);
+      // the front
+      fill(92,133,55);
+      //fill(150);
+      if (j == r-1) { fill(150);}
+      beginShape();
+      vertex(i*g, (j+1)*g, e);
+      vertex(i*g, (j+1)*g, 0);
       vertex((i+1)*g, (j+1)*g, 0);
       vertex((i+1)*g, (j+1)*g, e);
       endShape(CLOSE);
