@@ -11,11 +11,10 @@ int w, h, c, r, g, max_elevation;
 
 void setup() {
   fullScreen(P3D);
-  //size(600, 600, P3D);
+  //size(1200, 600, P3D);
   //stroke(0);
   noStroke();
-  //fill(122);
-  w = 1000;
+  w = 2000;
   h = 1000;
   g = 2;
   max_elevation = 150;
@@ -43,11 +42,28 @@ void draw() {
   translate(-w/2, -h/2);
   for (int i = 1; i < c; i ++) {
     for (int j = 1; j < r; j++) {
+      
       float e = hmap[i][j]; // elevation
       // the top
       //fill(48,86,29);
-      float height_shade = map(e,0,max_elevation,0,190);
+      float height_shade = map(e,0,max_elevation,50,200);
       fill(height_shade);
+      
+      // from black to green to white
+      boolean greenTops = false;
+      if (greenTops) {
+        float height_percent = map(e,0,max_elevation,0,1);
+        if (height_percent < .5)
+        {
+          fill(0,height_percent * 255 * 2,0);
+        } else {
+          float red_blue = 255 * map(height_percent, .5, 1, 0 , 1);
+          fill(red_blue,255,red_blue);
+        }
+      }
+      
+      
+      
       beginShape();
       vertex(i*g, j*g, e);
       vertex((i+1)*g, j*g, e);
@@ -56,7 +72,6 @@ void draw() {
       endShape(CLOSE);
       // the left
       fill(147,189,91);
-      //fill(150);
       beginShape();
       vertex(i*g, j*g, e);
       vertex(i*g, j*g, 0);
@@ -75,7 +90,6 @@ void draw() {
       // the front
       fill(92,133,55);
       //fill(150);
-      if (j == r-1) { fill(150);}
       beginShape();
       vertex(i*g, (j+1)*g, e);
       vertex(i*g, (j+1)*g, 0);
@@ -88,4 +102,9 @@ void draw() {
   //translate(58, 48, 0); 
   //rotateY(0.5);
   //box(40, 20, 50);
+}
+
+color topColor()
+{
+  return color(255);
 }
