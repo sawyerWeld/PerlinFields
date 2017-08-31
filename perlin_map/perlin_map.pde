@@ -18,7 +18,7 @@ void setup() {
   noStroke();
   w = 1000;
   h = 700;
-  g = 15; // MOST IMPORTANT NUMBER
+  g = 2; // MOST IMPORTANT NUMBER
   max_elevation = (int) random(100, 200);
   water_height = (int) random(10, max_elevation-20);
 
@@ -130,7 +130,7 @@ void drawShallowWater(int i, int j) {
 
 void drawWaterLevel() {
   fill(165, 237, 237); // background
-  fill(92, 133, 55); // land 
+  //fill(92, 133, 55); // land 
   beginShape();
   vertex(0, h+1, water_height);
   vertex(w, h+1, water_height);
