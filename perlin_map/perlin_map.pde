@@ -10,15 +10,16 @@ int w, h, c, r, g, max_elevation, water_height;
 // g = granularity, the width of each square
 
 void setup() {
-  fullScreen(P3D);
+  //fullScreen(P3D);
   noiseSeed((long)random(1000));
   frameRate(10);
-  //size(1200, 600, P3D);
+
+  size(1200, 600, P3D);
   //stroke(0);
   noStroke();
-  w = 1000;
-  h = 700;
-  g = 2; // MOST IMPORTANT NUMBER
+  w = 500;
+  h = 500;
+  g = 5; // MOST IMPORTANT NUMBER
   max_elevation = (int) random(100, 200);
   water_height = (int) random(10, max_elevation-20);
 
@@ -39,17 +40,20 @@ void setup() {
 
 void draw() {
   background(165, 237, 237);
-  //water_height = (int) map(mouseX, 0 , width, 0, max_elevation); 
+
+  water_height = (int) map(mouseX, 0, width, max_elevation, 0); 
   translate(width/2, height/2);
 
   rotateX(1);
-  translate(-w/2, -h/2);
-
+  translate(-w/2, -h/2, 0); 
+  translate(0,0,-water_height); // centers the generation on water heihgt
+  
   for (int i = 1; i < c; i ++) {
     for (int j = 1; j < r; j++) {
       float e = hmap[i][j];
-      if (e > water_height) {
-        drawLand(i, j);
+      float dif = e - water_height;
+      if (dif > 0) {
+        drawLand(i, j, color(0,0,0));
       } else {
         if (water_height - e < 10) {
           drawShallowWater(i, j);
@@ -61,7 +65,7 @@ void draw() {
   drawWaterLevel();
 }
 
-void drawLand(int i, int j)
+void drawLand(int i, int j, color block_color)
 {
   float e = hmap[i][j]; // elevation
   // the top
