@@ -14,12 +14,12 @@ void setup() {
   noiseSeed((long)random(1000));
   frameRate(10);
 
-  size(1200, 600, P3D);
+  size(600, 600, P3D);
   //stroke(0);
   noStroke();
   w = 500;
   h = 500;
-  g = 5; // MOST IMPORTANT NUMBER
+  g = 3; // MOST IMPORTANT NUMBER
   max_elevation = (int) random(100, 200);
   water_height = (int) random(10, max_elevation-20);
 
