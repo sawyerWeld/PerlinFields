@@ -3,15 +3,24 @@ int menu_pointer;
 int[]  menu_options = new int[6];
 
 void setup() {
-  size(800, 800, P3D);
+  size(420, 390, P3D);
   stroke(0);
   rotateX(PI/2);
-  menu_options[0] = 0;
-  menu_options[1] = 0;
-  menu_options[2] = 0;
-  menu_options[3] = 255;
-  menu_options[4] = 255;
-  menu_options[5] = 255;
+
+  boolean randColors = true;
+  if (randColors) {
+    for (int i = 0; i < 6; i++) {
+      menu_options[i] = (int) random(255);
+    }
+  } else {
+    menu_options[0] = 0;
+    menu_options[1] = 0;
+    menu_options[2] = 0;
+    menu_options[3] = 255;
+    menu_options[4] = 255;
+    menu_options[5] = 255;
+  }
+
   menu_pointer = 0;
 }
 
@@ -19,23 +28,35 @@ void draw() {
   background(255);
   textSize(16);
   fill(0);
-  text("fps = " + String.format("%.2f",frameRate), 0, 30);
-  text("interpolation = " + interpolation, 0, 180);
+  text("Color Interpolation Utility", 10, 30);
+  text("Interpolation = " + String.format("%.2f", interpolation), 10, 60);
   drawMenus();
 
-  translate(width/2, height/4);
+  strokeWeight(2);
 
+  // Left Color Rect
+  fill(color(menu_options[3], menu_options[4], menu_options[5]));
+  rect(30, 270, 30, 90);
 
+  // Right Color Rect
+  fill(color(menu_options[0], menu_options[1], menu_options[2]));
+  rect(360, 270, 30, 90);
+
+  // Pointer Thing
+  strokeWeight(1);
+  fill(0);
+  line(60, 330, 360, 330);
+  int pointer_x = (int) (map(interpolation, 0, 1, 1, 0) * 300 + 60); 
+  triangle(pointer_x, 330, pointer_x-10, 310, pointer_x+10, 310);
+
+  // Color Cube (drawn last because of rotation)
+  translate(300, 140);
   float time_scale = map(millis(), 0, 1000, 0, 1);
   float rot = time_scale * 2 * PI;
-
   rotateY(rot/10);
-
   //fill(interpolateColor(map(mouseX, 0, width, 0, 1)));
-  float color_lerp = map(millis()%3000,0,3000,1,0);
-  //print(millis()+"\n");
+  float color_lerp = map(millis()%3000, 0, 3000, 1, 0);
   fill(interpolateColor(color_lerp));
-
   box(100, 100, 100);
 }
 
@@ -50,23 +71,19 @@ void drawMenus() {
   String m_g1 = String.format("Green = %s", mu[4]);
   String m_b1 = String.format("Blue = %s", mu[5]);  
 
-  for (int i = 0; i < menu_options.length; i++) {
-    if (i == menu_pointer) {
-      menu_options[i] = menu_options[i]++;
-    }
-  }
-
   textSize(16);
   fill(0);
 
-  text("  >", 0, 300 + 30 * menu_pointer);
+  int menu_down = 90; //looks good at 90, so 90 -> 240
 
-  text(m_r0, 30, 300);
-  text(m_g0, 30, 330);
-  text(m_b0, 30, 360);
-  text(m_r1, 30, 390);
-  text(m_g1, 30, 420);
-  text(m_b1, 30, 450);
+  text(">", 10, menu_down + 30 * menu_pointer);
+
+  text(m_r0, 30, menu_down + (30 * 0));
+  text(m_g0, 30, menu_down + (30 * 1));
+  text(m_b0, 30, menu_down + (30 * 2));
+  text(m_r1, 30, menu_down + (30 * 3));
+  text(m_g1, 30, menu_down + (30 * 4));
+  text(m_b1, 30, menu_down + (30 * 5));
 }
 
 color interpolateColor(float interp) {
@@ -92,4 +109,8 @@ void keyPressed() {
       menu_options[menu_pointer] += 10;
     }
   }
+}
+
+void mouseClicked() {
+  setup();
 }
