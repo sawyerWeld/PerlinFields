@@ -1,8 +1,5 @@
-// Daniel Shiffman
-// http://codingtra.in
-// http://patreon.com/codingtrain
-// Code for: https://youtu.be/IKB1hWWedMk
-// Modified from original by Sawyer Welden
+// Note: This code is modified from work of Daniel Shiffman
+// Shiffman's website is http://codingtra.in
 
 int cols, rows;
 int scl = 20;
@@ -47,9 +44,7 @@ void draw() {
     }
     yoff += 0.2;
   }
-
-
-
+  
   background(150);
   stroke(255);
   //noFill();
