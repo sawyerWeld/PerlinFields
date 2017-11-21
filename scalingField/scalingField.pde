@@ -8,6 +8,7 @@ int h = 1600;
 float rotation = (PI/2);
 int yoffset = 0;
 boolean fly = false;
+boolean strip =false;
 
 float flying = 0;
 
@@ -24,10 +25,16 @@ void mouseClicked() {
   fly = !fly;
 }
 
+void keyReleased() {
+  if (key == TAB) {
+    strip = !strip;
+  }
+}
+
 void mouseWheel(MouseEvent event) {
   rotation += (event.getCount()>0)?.013:-.013;
   //rotation = (rotation<PI/2)?PI/2:rotation;
-  yoffset += (event.getCount()>0)?-2:+2;
+  yoffset += (event.getCount()>0)?-5:+5;
   //yoffset = (yoffset<0)?0:yoffset;
 }
 
@@ -54,6 +61,7 @@ void draw() {
   rotateX(rotation);
   translate(-w/2, -h);
   for (int y = 0; y < rows-1; y++) {
+    if (strip) {
     beginShape(TRIANGLE_STRIP);
     for (int x = 0; x < cols; x++) {
       vertex(x*scl, y*scl, terrain[x][y]);
@@ -61,5 +69,18 @@ void draw() {
       //rect(x*scl, y*scl, scl, scl);
     }
     endShape();
+    } else {
+      beginShape();
+      for (int x = 0; x < cols; x++) {
+      vertex(x*scl, y*scl, terrain[x][y]);
+      //vertex(x*scl, (y+1)*scl, terrain[x][y+1]);
+      //rect(x*scl, y*scl, scl, scl);
+    }
+    //vertex(w,h,0);
+    vertex(cols*scl,y*scl,-100);
+    vertex(0,y*scl,-100);
+    endShape();
+    }
+    
   }
 }
